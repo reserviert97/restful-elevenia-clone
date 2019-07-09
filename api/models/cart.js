@@ -1,3 +1,3 @@
 // apa kek disitu terserah
 // ngikut nambah
-// lagi
+// lagi bang
