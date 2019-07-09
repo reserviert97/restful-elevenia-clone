@@ -14,8 +14,10 @@
   "author": "Asep Lukman Hakim, Eko Febri, Haji Dito, M Fadhly NR, Nurlatif Ardhi",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^3.0.6",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.6.4"
   },
   "devDependencies": {
