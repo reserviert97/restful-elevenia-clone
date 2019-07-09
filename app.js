@@ -10,6 +10,7 @@ const cartRoute = require('./api/routes/cart');
 const transactionRoute = require('./api/routes/transactions');
 const userRoute = require('./api/routes/users');
 const orderRoute = require('./api/routes/orders');
+const tmpCartRoute = require('./api/routes/tmp_order')
 
 mongoose.connect(`mongodb+srv://noc:a89930548@mycluster-roclb.mongodb.net/elevania?retryWrites=true&w=majority`, {useNewUrlParser: true});
 mongoose.Promise = global.Promise;
@@ -44,6 +45,7 @@ app.use('/categories', categoryRoute);
 app.use('/cart', cartRoute);
 app.use('/transactions', transactionRoute);
 app.use('/orders', orderRoute);
+app.use('/tmpCart', tmpCartRoute);
 
 /**
  * Error Handler
