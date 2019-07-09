@@ -11,7 +11,7 @@
     "backend",
     "restful-api"
   ],
-  "author": "Asep Lukman Hakim, Eko Febri, Haji Dito, M Fadhly NR, Nurlatif Ardhi",
+  "author": "Asep Lukman Hakim, Eko Febriyanto, Haji Dito, M Fadhly NR, Nurlatif Ardhi",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^3.0.6",
