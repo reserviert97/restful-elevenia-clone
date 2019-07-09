@@ -11,7 +11,7 @@ const transactionSchema = mongoose.Schema({
     ref: 'User', required: true 
   },
   transaction_date: {
-    type: Date,
+    type: String,
     required: true
   },
   transaction_payment: {
@@ -30,6 +30,6 @@ const transactionSchema = mongoose.Schema({
     type: String, ref: 'User',
     required: true
   }
-});
+},{ versionKey : false });
 
 module.exports = mongoose.model('Transaction', transactionSchema, 'transaction')

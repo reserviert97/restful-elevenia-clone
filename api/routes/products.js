@@ -17,7 +17,23 @@ router.get('/', (req, res) => {
       });
     });
 });
-
+/* GET BY ID */
+router.get('/:id', (req, res) => {
+  const id = req.params.id
+  Product.findById(id)
+    .exec()
+    .then(products => {
+      res.status(200).json({
+        data: products
+      })
+    })
+    .catch(err => {
+      res.status(500).json({
+        error: err
+      });
+    });
+})
+/* POST */
 router.post('/',(req,res) => {
   let { price, name, stock, photo, description, date_of_entry } = req.body;
 
@@ -42,7 +58,7 @@ router.post('/',(req,res) => {
       });
     });
 });
-
+/* PATCH */
 router.patch('/:id',(req,res) => {
   let productId = req.params.id;
   let updateProduct = {};
@@ -63,6 +79,7 @@ router.patch('/:id',(req,res) => {
     });
   });
 });  
+/* DELETE */
 
 router.delete('/:id',(req,res) => {
   let productId = req.params.id;

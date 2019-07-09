@@ -16,6 +16,20 @@ router.get('/', (req, res) => {
     });
   });
 });
+/* Get By Id */
+router.get('/:id', (req, res) => {
+  Transaction.findById(req.params.id)
+    .then(transactions => {
+      res.status(200).json({
+        data: transactions
+      })
+    })
+    .catch(err => {
+      res.status(500).json({
+        error: err
+      });
+    });
+});
 /* POST */
 router.post('/',(req,res) => {
   let { number, day, date, payment, metode, total, id_user } = req.body;
@@ -26,8 +40,8 @@ router.post('/',(req,res) => {
     transaction_date: date,
     transaction_payment: payment,
     transaction_metode: metode,
-    trasaction_total: total,
-    trasaction_id_user: id_user
+    transaction_total: total,
+    transaction_id_user: id_user
   });
 
   transactionAdd.save()
