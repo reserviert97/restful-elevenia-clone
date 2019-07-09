@@ -3,12 +3,17 @@ const app = express();
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-
+/* Products */
 const productRoute = require('./api/routes/products');
+/* Category */
 const categoryRoute = require('./api/routes/categories');
+/* Cart */
 const cartRoute = require('./api/routes/cart');
+/* Transaction */
 const transactionRoute = require('./api/routes/transactions');
+/* User */
 const userRoute = require('./api/routes/users');
+/* Order */
 const orderRoute = require('./api/routes/orders');
 
 mongoose.connect(`mongodb+srv://noc:a89930548@mycluster-roclb.mongodb.net/elevania?retryWrites=true&w=majority`, {useNewUrlParser: true});
