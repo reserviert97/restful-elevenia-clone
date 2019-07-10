@@ -40,41 +40,39 @@ router.get('/:id', (req, res) => {
 
 router.post('/register', (req, res) => {
   const {
-    user_name,
-    user_email,
-    user_password,
-    user_address,
-    user_role,
-    user_rek_number,
-    user_postalcode,
-    user_photo
+    name,
+    email,
+    password,
+    gender,
+    phone,
+    birthDate,
+    role
   } = req.body;
 
 
-  User.find({user_email: user_email})
+  User.find({email})
     .then(user => {
       if (user >= 1) {
         return res.status(409).json({message: "Mail Exist"});
       } else {
-        bcrypt.hash(req.body.user_password, 10, (err, hash) => {
+        bcrypt.hash(req.body.password, 10, (err, hash) => {
           if (err) {
             return res.status(500).json({error: err});
           } else {
             const user = new User({
               _id: new mongoose.Types.ObjectId(),
-              user_password: hash,
-              user_name,
-              user_email,
-              user_address,
-              user_role,
-              user_rek_number,
-              user_postalcode,
-              user_photo
+              name,
+              email,
+              password: hash,
+              gender,
+              phone,
+              birthDate: new Date,
+              role
             });
             user.save()
               .then(result => {
                 res.status(201).json({
-                  message: 'User Created',
+                  status: 200,
                   createdUser: result
                 })
               })
@@ -100,20 +98,22 @@ router.post('/register', (req, res) => {
 });
 
 router.post('/login', (req, res) => {
-  User.find({user_email: req.body.user_email})
+  console.log(req.body.email);
+  
+  User.find({email: req.body.email})
     .exec()
     .then(user => {
       if (user.length < 1) {
         return res.status(401).json({message: 'Auth Failed'});
       }
-      bcrypt.compare(req.body.user_password, user[0].user_password, (err, result) => {
+      bcrypt.compare(req.body.password, user[0].password, (err, result) => {
         if (err) {
           return res.status(401).json({message: 'Auth Failed'});
         }
         if (result) {
           const token = jwt.sign(
             {
-              email: user[0].user_email,
+              email: user[0].email,
               userId: user[0]._id
             }, 
             process.env.JWT_KEY || 'secret',
@@ -122,6 +122,7 @@ router.post('/login', (req, res) => {
             }
           );
           return res.status(200).json({
+            status: 200,
             message: 'Auth Success',
             token: token
           });
