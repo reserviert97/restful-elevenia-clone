@@ -6,7 +6,10 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 router.get('/', (req, res) => {
-  User.find()
+  let email = req.query.email
+  let password =''
+  bcrypt.hash(req.query.password, 10, (err, hash) => password = hash)
+  User.find({email: email, password: password})
     .then(user => {
       res.status(200).json({
         data: user
@@ -17,7 +20,6 @@ router.get('/', (req, res) => {
         error: err
       });
     });
-
 });
 
 router.get('/:id', (req, res) => {
@@ -127,7 +129,6 @@ router.post('/login', (req, res) => {
             token: token
           });
         }
-
         return res.status(401).json({message: 'Auth Failed'});
       })
     })
