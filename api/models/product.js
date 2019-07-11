@@ -16,9 +16,10 @@ const productSchema = mongoose.Schema({
     type: Number,
     required: true
   },
-  photo : [{
-    image : { type: String }
-  }],
+  photo : {
+    type: Array,
+    required: true
+  },
   product_description: {
     type: String, ref: 'User', 
     required: true

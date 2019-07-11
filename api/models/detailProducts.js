@@ -26,10 +26,7 @@ const detailProductsSchema = mongoose.Schema({
   },
   warranty : {
     type : String
-  },
-  image : [{
-    image : { type: String }
-  }]
+  }
 },{ versionKey : false });
 
 module.exports = mongoose.model('DetailProducts', detailProductsSchema, 'product_details')

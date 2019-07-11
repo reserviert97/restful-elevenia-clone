@@ -104,9 +104,7 @@ router.get('/getById/:id', (req, res) => {
                     product_name : products.product_name,
                     product_price: products.product_price,
                     details : productDetails,
-                    Photo : [
-                      { image : products.photo }
-                    ],
+                    Photo : products.photo,
                     Category: categories.category_name
                   }
                 })
@@ -197,7 +195,10 @@ router.post('/',upload.single('photo'),(req,res) => {
           res.status(200).json({
             status : 200,
             result : 'Data has been success created',
-            data : [ products, detailsProducts ]
+            data : {
+              product: products,
+              detail: detailsProducts 
+            }
           })
         }) 
     })
