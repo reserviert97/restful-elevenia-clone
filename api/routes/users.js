@@ -123,6 +123,7 @@ router.post('/login', (req, res) => {
           return res.status(200).json({
             status: 200,
             message: 'Auth Success',
+            user: user,
             token: token
           });
         }
