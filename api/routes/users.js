@@ -46,7 +46,8 @@ router.post('/register', (req, res) => {
     gender,
     phone,
     birthDate,
-    role
+    role,
+    profileImage
   } = req.body;
 
 
@@ -67,7 +68,8 @@ router.post('/register', (req, res) => {
               gender,
               phone,
               birthDate: new Date,
-              role
+              role,
+              profileImage
             });
             user.save()
               .then(result => {

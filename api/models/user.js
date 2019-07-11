@@ -32,6 +32,9 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true,
     default: 'buyer'
+  },
+  profileImage: {
+    type: String
   }
 }, { timestamps: true});
 
