@@ -1,12 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
+const multerUploads = require('../middleware/multer').multerUploads;
+const dataUri = require('../middleware/multer').dataUri;
+const cloudinary = require('../../config/cloudinaryConfig');
 
 const DetailProducts = require('../models/detailProducts')
 
 const Product = require('../models/product');
 const Category = require('../models/category');
 const User = require('../models/user');
+
 /** FILE UPLOAD */
 
 const storage = multer.diskStorage({
@@ -160,53 +164,73 @@ router.get('/:id', (req, res) => {
     });
 })
 /* POST */
-router.post('/',upload.single('photo'),(req,res) => {
+router.post('/', multerUploads, (req,res) => {
+
+  cloudinary.config();
   /* common product */
-  let { price, name, stock, description, pCategory,pSID, photo } = req.body;
+  let { price, name, stock, description, pCategory,pSID } = req.body;
   /* details product */
   let { condition, productWeight, countryOfOrigin, location, warranty } = req.body;
 
-  let productAdd = new Product({
-    product_price : price,
-    product_name: name,
-    product_stock: stock,
-    // photo: req.file.path,
-    photo: photo,
-    product_description: description,
-    product_IdCategory : pCategory,
-    product_sellerID : pSID
-  });
+  if (req.file) {
+    const file = dataUri(req).content;
 
-  productAdd.save()
-    .then(products => {
-      console.log(products)
-      let productDetailsAdd = new DetailProducts({
-        condition : condition,
-        numberOfProduct : products._id,
-        productWeight : productWeight,
-        countryOfOrigin : countryOfOrigin,
-        location : location,
-        warranty : warranty,
-        stock: products.product_stock
-      })
+    return cloudinary.uploader.upload(file)
+      .then(result => {
+        const image = result.url;
+        
+        let photo = [];
+        photo.push(image)
 
-      productDetailsAdd.save()
-        .then(detailsProducts => {
-          res.status(200).json({
-            status : 200,
-            result : 'Data has been success created',
-            data : {
-              product: products,
-              detail: detailsProducts 
-            }
+        let productAdd = new Product({
+          product_price : price,
+          product_name: name,
+          product_stock: stock,
+          photo,
+          product_description: description,
+          product_IdCategory : pCategory,
+          product_sellerID : pSID
+        });
+      
+        productAdd.save()
+          .then(products => {
+            console.log(products)
+            let productDetailsAdd = new DetailProducts({
+              condition : condition,
+              numberOfProduct : products._id,
+              productWeight : productWeight,
+              countryOfOrigin : countryOfOrigin,
+              location : location,
+              warranty : warranty,
+              stock: products.product_stock
+            })
+      
+            productDetailsAdd.save()
+              .then(detailsProducts => {
+                res.status(200).json({
+                  status : 200,
+                  result : 'Data has been success created',
+                  data : {
+                    product: products,
+                    detail: detailsProducts 
+                  }
+                })
+              }) 
           })
-        }) 
-    })
-    .catch(err => {
-      res.status(500).json({
-        error : err
-      });
-    });
+          .catch(err => {
+            res.status(500).json({
+              error : err
+            });
+          });
+
+      })
+      .catch((err) => res.status(400).json({
+        message: 'something went wrong',
+        data: err
+      }))
+  }
+
+  
 });
 
 /* PATCH */
