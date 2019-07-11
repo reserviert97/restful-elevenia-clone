@@ -8,7 +8,10 @@ router.get('/', (req, res) => {
     TmpOrder.find().populate('products')
     .exec()
     .then(tmpOrder => {
+      // return console.log(tmpOrder[0].products[0].id) /* get one data from products
       res.status(200).json({
+        status : 200,
+        message : 'Get data cart has been successfully',
         data: tmpOrder
       })
     })
@@ -59,8 +62,8 @@ router.post('/', (req, res) => {
     _id: new mongoose.Types.ObjectId(),
     userId: req.body.userId,
     products: req.body.products,
-    total_of_product: req.body.total_of_product,
-    total_amount_ordered: req.body.total_amount_ordered
+    quantity: req.body.quantity,
+    totalAmount: req.body.totalAmount
     });
     tmpCart
     .save()

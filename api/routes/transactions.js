@@ -7,6 +7,8 @@ router.get('/', (req, res) => {
   .exec()
   .then(transactions => {
     res.status(200).json({
+      status: 200,
+      message : "Get data transaction is successfully",
       data : transactions
     })
   })
@@ -45,6 +47,8 @@ router.post('/',(req,res) => {
   transactionAdd.save()
     .then(transactions => {
       res.status(200).json({
+        status : 200,
+        message : 'Transactions has been added',
         data : transactions
       })
     })
@@ -54,42 +58,5 @@ router.post('/',(req,res) => {
       });
     });
 });
-/* PATCH */
-router.patch('/:id',(req,res) => {
-  let transactionId = req.params.id;
-  let updateTransaction = {};
-
-  for(const transactions of req.body) {
-    updateTransaction[transactions.field] = transactions.value;
-  }
-
-  Transaction.update({ _id: transactionId },{ $set: updateTransaction })
-  .then(transaction => {
-    res.status(200).json({
-      data : transaction
-    })
-  })
-  .catch(err => {
-    res.status(500).json({
-      error : err
-    });
-  });
-});  
-/* DELETE */
-
-router.delete('/:id',(req,res) => {
-  let transactionId = req.params.id;
-
-  Transaction.remove({ _id: transactionId })
-  .then(transactions => {
-    res.status(200).json({
-      data : transactions
-    })
-  })
-  .catch(err => {
-    res.status(500).json({
-      error : err
-    });
-  });
-});  
+  
 module.exports = router;
