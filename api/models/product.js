@@ -16,17 +16,19 @@ const productSchema = mongoose.Schema({
     type: Number,
     required: true
   },
-  photo: {
-    type: String,
-    required: true
-  },
+  photo : [{
+    image : { type: String }
+  }],
   product_description: {
     type: String, ref: 'User', 
     required: true
   },
   product_date_of_entry: {
     type: Date, default: Date.now
+  },
+  profileImage : {
+    type : String
   }
-}, { versionKey : false });
+},{ versionKey : false });
 
 module.exports = mongoose.model('Product', productSchema, 'products')

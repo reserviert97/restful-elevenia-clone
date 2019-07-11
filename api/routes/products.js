@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 
+const DetailProducts = require('../models/detailProducts')
+
 const Product = require('../models/product');
 const Category = require('../models/category');
 const User = require('../models/user');
@@ -59,10 +61,18 @@ router.get('/tes',(req,res) => {
 })
 /* ************************************************************ */
 router.get('/', (req, res) => {
+  let limit = (req.query.limit) ? parseInt(req.query.limit) : 10;
+  let page = (req.query.page) ? parseInt(req.query.page) : 1;
+  
+  let offset = (page - 1) * limit;
+
   Product.find()
-    .exec()
+    .limit(limit)
+    .skip(offset)
     .then(products => {
       res.status(200).json({
+        status : 200,
+        message : 'get products success',
         data : products
       })
     })
@@ -82,25 +92,26 @@ router.get('/getById/:id', (req, res) => {
         .then(categories => {
           User.findOne({_id : products.product_sellerID, role: 'seller'})
           .then(users => {
-          res.status(200).json({
-              data: {
-                product_id : id,
-                seller : users.name,
-                product_name : products.product_name,
-                product_price: products.product_price,
-                details : {
-                  product_stock : products.product_stock,
-                  condition : "Good",
-                  number_of_product: 'P-0001',
-                  product_weight: '2kg',
-                  country_of_origin: 'Indonesia',
-                  warranty : true,
-                },
-                Photo : [products.photo,products.photo],
-                Category: categories.category_name
-              }
+            DetailProducts.findOne({numberOfProduct: id})
+              .then(productDetails => {
+                console.log(productDetails)
+                res.status(200).json({
+                  status: 200,
+                  results : 'Get data has been successfully',
+                  data: {
+                    product_id : id,
+                    seller : users.name,
+                    product_name : products.product_name,
+                    product_price: products.product_price,
+                    details : productDetails,
+                    Photo : [
+                      { image : products.photo }
+                    ],
+                    Category: categories.category_name
+                  }
+                })
+              })
             })
-          })
         })
     })
     .catch(err => {
@@ -152,22 +163,43 @@ router.get('/:id', (req, res) => {
 })
 /* POST */
 router.post('/',upload.single('photo'),(req,res) => {
-  let { price, name, stock, description, pCategory,pSID } = req.body;
+  /* common product */
+  let { price, name, stock, description, pCategory,pSID, photo } = req.body;
+  /* details product */
+  let { condition, productWeight, countryOfOrigin, location, warranty } = req.body;
 
   let productAdd = new Product({
     product_price : price,
     product_name: name,
     product_stock: stock,
-    photo: req.file.path,
+    // photo: req.file.path,
+    photo: photo,
     product_description: description,
     product_IdCategory : pCategory,
     product_sellerID : pSID
   });
+
   productAdd.save()
     .then(products => {
-      res.status(200).json({
-        data : products
+      console.log(products)
+      let productDetailsAdd = new DetailProducts({
+        condition : condition,
+        numberOfProduct : products._id,
+        productWeight : productWeight,
+        countryOfOrigin : countryOfOrigin,
+        location : location,
+        warranty : warranty,
+        stock: products.product_stock
       })
+
+      productDetailsAdd.save()
+        .then(detailsProducts => {
+          res.status(200).json({
+            status : 200,
+            result : 'Data has been success created',
+            data : [ products, detailsProducts ]
+          })
+        }) 
     })
     .catch(err => {
       res.status(500).json({
@@ -175,6 +207,7 @@ router.post('/',upload.single('photo'),(req,res) => {
       });
     });
 });
+
 /* PATCH */
 router.patch('/:id',(req,res) => {
   let productId = req.params.id;
