@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 
 const productSchema = mongoose.Schema({
 
-  product_category : { type: mongoose.Schema.Types.ObjectId, ref: 'Category'},
-
+  product_IdCategory : { type: mongoose.Schema.Types.ObjectId, ref: 'Category'},
+  product_sellerID : {type: mongoose.Schema.Types.ObjectId, ref: 'Users'},
   product_price: {
     type: Number,
     required: true

@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require("mongoose");
-const TmpOrder = require('../models/tmpCart')
+const TmpOrder = require('../models/tmpCart');
+const Product = require('../models/product');
+
 router.get('/', (req, res) => {
-    TmpOrder.find()
+    TmpOrder.find().populate('products')
     .exec()
     .then(tmpOrder => {
       res.status(200).json({
@@ -18,7 +20,7 @@ router.get('/', (req, res) => {
 })
 router.get('/:id', (req, res) => {
     const id = req.params.id
-    TmpOrder.findById(id)
+    TmpOrder.findById(id).populate('products')
       .exec()
       .then(tmpOrder => {
         res.status(200).json({
@@ -31,13 +33,34 @@ router.get('/:id', (req, res) => {
         });
       });
   })
+router.get('/users/:id', (req, res) => {
+  const id = req.params.id
+  TmpOrder.findOne({userId: id}).populate('products')
+    .exec()
+    .then(tmpOrder => {
+        Product.findById(tmpOrder.product)
+        .exec()
+        .then(result =>{
+          tmpOrder.tmp_no_order = result
+          res.status(200).json({
+            data: tmpOrder,
+            value: result
+          })
+        })
+    })
+    .catch(err => {
+      res.status(500).json({
+        error: err
+      });
+    });
+})
 router.post('/', (req, res) => {
     const tmpCart = new TmpOrder({
     _id: new mongoose.Types.ObjectId(),
-    tmp_no_order: req.body.tmp_no_order,
-    tmp_session_order: req.body.tmp_session_order,
-    tmp_number_of_product: req.body.tmp_number_of_product,
-    tmp_amount_ordered: req.body.tmp_amount_ordered
+    userId: req.body.userId,
+    products: req.body.products,
+    total_of_product: req.body.total_of_product,
+    total_amount_ordered: req.body.total_amount_ordered
     });
     tmpCart
     .save()

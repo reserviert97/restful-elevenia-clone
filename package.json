@@ -11,14 +11,17 @@
     "backend",
     "restful-api"
   ],
-  "author": "Asep Lukman Hakim, Eko Febri, Haji Dito, M Fadhly NR, Nurlatif Ardhi",
+  "author": "Asep Lukman Hakim, Eko Febriyanto, Haji Dito, M Fadhly NR, Nurlatif Ardhi",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^3.0.6",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.6.4"
+    "mongoose": "^5.6.4",
+    "morgan": "^1.9.1",
+    "nodemon": "^1.19.1",
+    "multer": "^1.4.1"
   },
   "devDependencies": {
     "morgan": "^1.9.1",
