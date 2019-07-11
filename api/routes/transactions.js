@@ -32,12 +32,10 @@ router.get('/:id', (req, res) => {
 });
 /* POST */
 router.post('/',(req,res) => {
-  let { number, day, date, payment, metode, total, id_user } = req.body;
+  let { number, payment, metode, total, id_user } = req.body;
 
   let transactionAdd = new Transaction({
     transaction_number : number,
-    transaction_day: day,
-    transaction_date: date,
     transaction_payment: payment,
     transaction_metode: metode,
     transaction_total: total,

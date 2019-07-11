@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 
 const productSchema = mongoose.Schema({
-  _id: mongoose.Schema.Types.ObjectId,
+
+  product_IdCategory : { type: mongoose.Schema.Types.ObjectId, ref: 'Category'},
+  product_sellerID : {type: mongoose.Schema.Types.ObjectId, ref: 'Users'},
   product_price: {
     type: Number,
     required: true
@@ -23,8 +25,7 @@ const productSchema = mongoose.Schema({
     required: true
   },
   product_date_of_entry: {
-    type: String, ref: 'User', 
-    required: true
+    type: Date, default: Date.now
   }
 }, { versionKey : false });
 
