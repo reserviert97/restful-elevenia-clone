@@ -6,10 +6,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 router.get('/', (req, res) => {
-  let email = req.query.email
-  let password =''
-  bcrypt.hash(req.query.password, 10, (err, hash) => password = hash)
-  User.find({email: email, password: password})
+  User.find()
     .then(user => {
       res.status(200).json({
         data: user
