@@ -27,6 +27,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
+app.use('/uploads', express.static('uploads'));
 
 /**
  * CORS SETUP

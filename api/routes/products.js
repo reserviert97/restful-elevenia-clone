@@ -12,7 +12,7 @@ const storage = multer.diskStorage({
     cb(null, './uploads/');
   },
   filename: function(req, file, cb){
-    cb(null, new Date().toISOString().replace(/:/g, '-') + file.originalname)
+    cb(null, new Date().toISOString().replace(/:/g, '-') +'-'+ file.originalname)
   }
 });
 
@@ -80,7 +80,7 @@ router.get('/getById/:id', (req, res) => {
     .then(products => {
       Category.findById({_id : products.product_IdCategory})
         .then(categories => {
-          User.findOne({_id : products.product_sellerID, role: 'Seller'})
+          User.findOne({_id : products.product_sellerID, role: 'seller'})
           .then(users => {
           res.status(200).json({
               data: {
@@ -152,7 +152,7 @@ router.get('/:id', (req, res) => {
 })
 /* POST */
 router.post('/',upload.single('photo'),(req,res) => {
-  let { price, name, stock, description, pCategory } = req.body;
+  let { price, name, stock, description, pCategory,pSID } = req.body;
 
   let productAdd = new Product({
     product_price : price,
@@ -160,9 +160,9 @@ router.post('/',upload.single('photo'),(req,res) => {
     product_stock: stock,
     photo: req.file.path,
     product_description: description,
-    product_IdCategory : pCategory
+    product_IdCategory : pCategory,
+    product_sellerID : pSID
   });
-
   productAdd.save()
     .then(products => {
       res.status(200).json({
@@ -186,8 +186,13 @@ router.patch('/:id',(req,res) => {
 
   Product.update({ _id: productId },{ $set: updateProduct })
   .then(products => {
-    res.status(200).json({
-      data : products
+    Product.findById({_id : productId })
+    .then(productsData => {
+      res.status(200).json({
+        status : 200,
+        results : 'Data has been updated',
+        data : productsData
+      })
     })
   })
   .catch(err => {
