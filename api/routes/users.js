@@ -8,6 +8,7 @@ const multer = require('multer');
 const multerUploads = require('../middleware/multer').multerUploads;
 const dataUri = require('../middleware/multer').dataUri;
 const cloudinary = require('../../config/cloudinaryConfig');
+const nodemailer = require('nodemailer');
 
 router.get('/', (req, res) => {
   User.find()
