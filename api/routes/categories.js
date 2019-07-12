@@ -8,10 +8,6 @@ router.get('/', (req, res) => {
     .exec()
     .then(category => { 
       res.status(200).json({
-        status: 200,
-        message: 'Get categories successfully',
-        totalRow : category.length,
-        totalPage: Math.ceil(parseInt(category.length) / limit),
         data: category
       })
     })
