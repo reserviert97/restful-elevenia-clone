@@ -81,26 +81,27 @@ router.get('/getById/:id', (req, res) => {
           .then(users => {
             DetailProducts.findOne({numberOfProduct: id})
               .then(productDetails => {
-                if(products !== ""){
-                  res.status(200).json({
-                    status: 200,
-                    results : 'Get data has been successfully',
-                    data: {
-                      product_id : id,
-                      seller : users.name,
-                      product_name : products.product_name,
-                      product_price: products.product_price,
-                      Photo : products.photo,
-                      Category: categories.category_name,
-                      productDetails
-                    }
-                  })  
-                }else{
-                  res.status(404).json({
-                    status:404,
-                    message: 'Data not found !'
-                  })
-                }
+                console.log(productDetails)
+                res.status(200).json({
+                  status: 200,
+                  results : 'Get data has been successfully',
+                  data: {
+                    product_id : id,
+                    seller : users.name,
+                    profileImage : users.profileImage,
+                    product_name : products.product_name,
+                    product_price: products.product_price,
+                    condition: productDetails.condition,
+                    countryOfOrigin: productDetails.countryOfOrigin,
+                    location: productDetails.location,
+                    numberOfProduct: productDetails.numberOfProduct,
+                    productWeight: productDetails.productWeight,
+                    stock: productDetails.stock,
+                    warranty: productDetails.warranty,
+                    Photo : products.photo,
+                    Category: categories.category_name
+                  }
+                })
               })
             })
         })
@@ -152,15 +153,20 @@ router.get('/:id', (req, res) => {
 })
 /* POST */
 router.post('/', multerUploads, (req,res) => {
-
+  console.log('masuk post');
+  
   cloudinary.config();
   /* common product */
   let { price, name, stock, description, pCategory,pSID } = req.body;
   /* details product */
   let { condition, productWeight, countryOfOrigin, location, warranty } = req.body;
-
+  console.log('sebelum pengkodisian');
+  
+  console.log(req.file);
+  
   if (req.file) {
     const file = dataUri(req).content;
+    console.log('masuk if else');
 
     return cloudinary.uploader.upload(file)
       .then(result => {
@@ -191,9 +197,12 @@ router.post('/', multerUploads, (req,res) => {
               warranty : warranty,
               stock: products.product_stock
             })
-      
+            console.log('save product');
+            
             productDetailsAdd.save()
               .then(detailsProducts => {
+                console.log('save detail product');
+                
                 res.status(200).json({
                   status : 200,
                   result : 'Data has been success created',
@@ -215,6 +224,9 @@ router.post('/', multerUploads, (req,res) => {
         message: 'something went wrong',
         data: err
       }))
+  } else {
+    console.log('file gk ada');
+    
   }
 
   

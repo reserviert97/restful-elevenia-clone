@@ -8,6 +8,7 @@ router.get('/', (req, res) => {
     .exec()
     .then(category => { 
       res.status(200).json({
+        status: 200,
         data: category
       })
     })

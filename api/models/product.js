@@ -21,8 +21,7 @@ const productSchema = mongoose.Schema({
     required: true
   },
   product_description: {
-    type: String, ref: 'User', 
-    required: true
+    type: String
   },
   product_date_of_entry: {
     type: Date, default: Date.now
