@@ -5,7 +5,11 @@ const orderSchema = mongoose.Schema({
   category_name: {
     type: String,
     required: true
-  }
+  },
+  productId: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Product'
+  }]
 });
 
 module.exports = mongoose.model('Category', orderSchema, 'category')

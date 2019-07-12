@@ -8,6 +8,7 @@ const multer = require('multer');
 const multerUploads = require('../middleware/multer').multerUploads;
 const dataUri = require('../middleware/multer').dataUri;
 const cloudinary = require('../../config/cloudinaryConfig');
+const nodemailer = require('nodemailer');
 
 router.get('/', (req, res) => {
   User.find()
@@ -21,7 +22,6 @@ router.get('/', (req, res) => {
         error: err
       });
     });
-
 });
 
 router.get('/:id', (req, res) => {
@@ -134,7 +134,6 @@ router.post('/login', (req, res) => {
             token: token
           });
         }
-
         return res.status(401).json({message: 'Auth Failed'});
       })
     })
@@ -242,11 +241,75 @@ router.patch("/upload/:id", multerUploads, (req, res) => {
   //     }
   //   )
   // })
-
-  
-
 });
 
+/*      FORGOT PASSWORD       */
+router.post('/forgotPassword', (req,res) => {
+  if(req.body.email === '') {
+    res.json('email required !')
+  }
+  console.log(req.body.email);
+  User.findOne({ email : req.body.email })
+    .then(users => {
+      if(users === null) {
+        console.log(' Email not in database ');
+        res.json(' Email not in db ')
+      }else {
+        const transporter = nodemailer.createTransport({
+          service : 'gmail',
+          auth: {
+            user : 'maslownr@gmail.com',
+            pass: '085959933411'
+          },
+        });
 
+        const mailOptions = {
+          from : 'maslownr@gmail.com',
+          to : `${users.email}`,
+          subject: 'Link to reset password',
+          text: 'Ingin melihat passwordmu ? klik link berikut !\n'+`http://localhost:3000/users/resetPassword/${users._id}`     
+        };
 
+        transporter.sendMail(mailOptions,function(err,res){
+          if(err){
+            console.error('something wrong ',err);
+          }
+        })
+      }
+      return res.status(200).json({
+        status : 200,
+        message : `Data has been sended to email ${users.email}`
+      })
+    })
+});
+
+const BRCYPT_SALT_ROUNDS = 10;
+router.get('/resetPassword/:id',(req,res)=>{
+  let id = req.params.id
+  User.findOne({ _id : id })
+    .then(users => {
+      if(users !== null) {
+        console.log('users exist in db');
+        bcrypt
+          .hash('USERELEVANIA', BRCYPT_SALT_ROUNDS)
+          .then(hashedPassword => {
+            User.update({_id : users._id},{
+              password : hashedPassword
+            })
+            console.log(hashedPassword);
+          })
+          .then(()=>{
+            res.status(200).send(
+              {
+                status : 200,
+                NewPassword : 'USERELEVANIA'
+              }
+            )
+          }) 
+      } else {
+          console.log('no users exist in db');
+          res.status(404).json('no users in db')
+      }
+    })
+})
 module.exports = router;

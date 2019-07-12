@@ -4,10 +4,11 @@ const mongoose = require("mongoose");
 const Category = require('../models/category');
 
 router.get('/', (req, res) => {
-  Category.find()
+  Category.find().populate({path:'productId',options: { limit: 5 }})
     .exec()
-    .then(category => {
+    .then(category => { 
       res.status(200).json({
+        status: 200,
         data: category
       })
     })
@@ -37,6 +38,7 @@ router.get('/:id', (req, res) => {
       });
     });
 })
+
 router.post('/', (req, res) => {
   const category = new Category({
   _id: new mongoose.Types.ObjectId(),
@@ -46,6 +48,7 @@ router.post('/', (req, res) => {
   .save()
   .then(result => {
     res.status(201).json({
+      status: 201,
       message: "success to insert data",
       created: result
     });
@@ -62,7 +65,11 @@ router.patch("/:id", (req, res) => {
   Category.update({ _id: id }, { category_name: category_name })
     .exec()
     .then(result => {
-      res.status(200).json(result);
+      res.status(200).json({
+        status: 200,
+        message : 'Category has been edited',
+        data : result
+      });
     })
     .catch(err => {
       res.status(500).json({
