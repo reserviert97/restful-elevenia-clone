@@ -5,9 +5,6 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const crypto = require('crypto');
-const nodemailer = require('nodemailer');
-
 router.get('/', (req, res) => {
   User.find()
     .then(user => {
@@ -98,6 +95,8 @@ router.post('/register', (req, res) => {
         error: err
       })
     });
+
+  
 });
 
 router.post('/login', (req, res) => {
