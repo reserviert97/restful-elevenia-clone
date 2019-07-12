@@ -4,15 +4,9 @@ const mongoose = require("mongoose");
 const Category = require('../models/category');
 
 router.get('/', (req, res) => {
-  let limit = (req.query.limit) ? parseInt(req.query.limit) : 10;
-  let page = (req.query.page) ? parseInt(req.query.page) : 1;
-  
-  let offset = (page - 1) * limit;
-  
-  Category.find()
-    .limit(limit)
-    .skip(offset)
-    .then(category => {
+  Category.find().populate({path:'productId',options: { limit: 5 }})
+    .exec()
+    .then(category => { 
       res.status(200).json({
         status: 200,
         message: 'Get categories successfully',
@@ -47,6 +41,7 @@ router.get('/:id', (req, res) => {
       });
     });
 })
+
 router.post('/', (req, res) => {
   const category = new Category({
   _id: new mongoose.Types.ObjectId(),

@@ -22,7 +22,6 @@ router.get('/', (req, res) => {
         error: err
       });
     });
-
 });
 
 router.get('/:id', (req, res) => {
@@ -135,7 +134,6 @@ router.post('/login', (req, res) => {
             token: token
           });
         }
-
         return res.status(401).json({message: 'Auth Failed'});
       })
     })

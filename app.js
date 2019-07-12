@@ -17,6 +17,8 @@ const userRoute = require('./api/routes/users');
 const orderRoute = require('./api/routes/orders');
 /* Notification */
 const notifRoute = require('./api/routes/notif');
+/*Wishlist */
+const wishlistRoute = require('./api/routes/wishlist');
 
 mongoose.connect(`mongodb+srv://noc:a89930548@mycluster-roclb.mongodb.net/elevania?retryWrites=true&w=majority`, {useNewUrlParser: true});
 mongoose.Promise = global.Promise;
@@ -53,6 +55,7 @@ app.use('/transactions', transactionRoute);
 app.use('/orders', orderRoute);
 app.use('/tmpCart', tmpCartRoute);
 app.use('/notif',notifRoute);
+app.use('/wishlist',wishlistRoute);
 
 /**
  * Error Handler
