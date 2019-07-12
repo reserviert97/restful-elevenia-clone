@@ -20,7 +20,7 @@ router.get('/', (req, res) => {
 
 router.get('/:id', (req, res) => {
   const id = req.params.id
-  Wishlist.findById(id).populate({path:'productId',options: { limit: 5 }})
+  Wishlist.findOne({id_user:id}).populate('productId')
     .exec()
     .then(wishlist => {
       res.status(200).json({
