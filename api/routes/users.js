@@ -4,6 +4,10 @@ const User = require('../models/user');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const multer = require('multer');
+const multerUploads = require('../middleware/multer').multerUploads;
+const dataUri = require('../middleware/multer').dataUri;
+const cloudinary = require('../../config/cloudinaryConfig');
 
 router.get('/', (req, res) => {
   User.find()
@@ -139,5 +143,108 @@ router.post('/login', (req, res) => {
       })
     });
 });
+
+router.patch("/:id", (req, res) => {
+  const id = req.params.id;
+  const updateOps = {};
+
+  for (const key of Object.keys(req.body)) {
+    updateOps[key] = req.body[key];
+  }
+
+  User.update({ _id: id }, { $set: updateOps })
+    .exec()
+    .then(result => {
+      res.status(200).json(result);
+    })
+    .catch(err => {
+      res.status(500).json({
+        error: err
+      });
+    });
+
+});
+
+router.patch("/upload/:id", multerUploads, (req, res) => {
+  const id = req.params.id;
+ 
+  cloudinary.config();
+
+  if (req.file) {
+    const file = dataUri(req).content;
+
+    return cloudinary.uploader.upload(file)
+      .then(result => {
+        const image = result.url;
+        User.update({ _id: id }, { profileImage: image })
+          .exec()
+          .then(result => {
+            res.status(200).json({
+              message: 'upload success',
+              data: {
+                image
+              }
+            });
+          })
+          .catch(err => {
+            res.status(500).json({
+              error: err
+            });
+          });
+      })
+      .catch((err) => res.status(400).json({
+        message: 'something went wrong',
+        data: err
+      }))
+  }
+
+  // upload(req, res, function(err) {
+  //   if (err) {
+  //     return res.send(err)
+  //   }
+  //   console.log('file uploaded to server')
+  //   console.log(req.file)
+
+  //   // SEND FILE TO CLOUDINARY
+  //   const cloudinary = require('cloudinary').v2
+  //   cloudinary.config({
+  //     cloud_name: 'elevania789',
+  //     api_key: '121298662299568',
+  //     api_secret: 'rbCJKjZ6rUAGMM6OttHgCgTpirY'
+  //   })
+    
+  //   const path = req.file.path
+  //   const uniqueFilename = new Date().toISOString()
+
+  //   cloudinary.uploader.upload(
+  //     path,
+  //     { public_id: `profile/${uniqueFilename}`, tags: `profile` }, // directory and tags are optional
+  //     function(err, image) {
+  //       if (err) return res.send(err)
+  //       console.log('file uploaded to Cloudinary')
+  //       // remove file from server
+  //       const fs = require('fs')
+  //       fs.unlinkSync(path)
+  //       // return image details
+      
+        // User.update({ _id: id }, { profileImage: image.url })
+        //   .exec()
+        //   .then(result => {
+        //     res.status(200).json(result);
+        //   })
+        //   .catch(err => {
+        //     res.status(500).json({
+        //       error: err
+        //     });
+        //   });
+  //     }
+  //   )
+  // })
+
+  
+
+});
+
+
 
 module.exports = router;

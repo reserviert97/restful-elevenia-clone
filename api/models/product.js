@@ -16,8 +16,8 @@ const productSchema = mongoose.Schema({
     type: Number,
     required: true
   },
-  photo: {
-    type: String,
+  photo : {
+    type: Array,
     required: true
   },
   product_description: {
@@ -26,7 +26,10 @@ const productSchema = mongoose.Schema({
   },
   product_date_of_entry: {
     type: Date, default: Date.now
+  },
+  profileImage : {
+    type : String
   }
-}, { versionKey : false });
+},{ versionKey : false });
 
 module.exports = mongoose.model('Product', productSchema, 'products')
