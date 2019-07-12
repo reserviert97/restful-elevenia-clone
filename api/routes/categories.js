@@ -8,6 +8,10 @@ router.get('/', (req, res) => {
     .exec()
     .then(category => { 
       res.status(200).json({
+        status: 200,
+        message: 'Get categories successfully',
+        totalRow : category.length,
+        totalPage: Math.ceil(parseInt(category.length) / limit),
         data: category
       })
     })
@@ -47,6 +51,7 @@ router.post('/', (req, res) => {
   .save()
   .then(result => {
     res.status(201).json({
+      status: 201,
       message: "success to insert data",
       created: result
     });
@@ -63,7 +68,11 @@ router.patch("/:id", (req, res) => {
   Category.update({ _id: id }, { category_name: category_name })
     .exec()
     .then(result => {
-      res.status(200).json(result);
+      res.status(200).json({
+        status: 200,
+        message : 'Category has been edited',
+        data : result
+      });
     })
     .catch(err => {
       res.status(500).json({

@@ -5,18 +5,19 @@ const orderSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     required: true 
   },
-  products: [{ 
+  products: [
+  {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Product'
-  }],
-  total_of_product: {
+    ref: 'Product'  
+  }
+  ],
+  quantity: {
     type: Number,
-    required: true
+    default: 1
   },
-  total_amount_ordered: {
-    type: Number, 
-    required: true
+  totalAmount: {
+    type: Number
   },
-});
+},{ versionKey : false });
 
 module.exports = mongoose.model('TmpOrder', orderSchema, 'tmp_order')

@@ -8,9 +8,19 @@ router.get('/', (req, res) => {
     TmpOrder.find().populate('products')
     .exec()
     .then(tmpOrder => {
-      res.status(200).json({
-        data: tmpOrder
-      })
+      // return console.log(tmpOrder[0].products[0].id) /* get one data from products
+      if(tmpOrder !== ""){
+        res.status(200).json({
+          status : 200,
+          message : 'Get data cart has been successfully',
+          data: tmpOrder
+        })
+      }else{
+        res.status(404).json({
+          status :  404,
+          message: 'Data not found !'
+        })
+      }
     })
     .catch(err => {
       res.status(500).json({
@@ -41,16 +51,24 @@ router.get('/users/:id', (req, res) => {
         Product.findById(tmpOrder.product)
         .exec()
         .then(result =>{
-          tmpOrder.tmp_no_order = result
-          res.status(200).json({
-            data: tmpOrder,
-            value: result
-          })
+          if(tmpOrder !== ""){
+            tmpOrder.tmp_no_order = result
+            res.status(200).json({
+              data: tmpOrder
+            })
+          }else {
+            res.status(404).json({
+              status : 404,
+              message: "Error data not found !"
+            })
+          }
         })
     })
     .catch(err => {
       res.status(500).json({
-        error: err
+        status : 500,
+        alert : "Please enter the User ID correctly",
+        message : err, 
       });
     });
 })
@@ -59,11 +77,10 @@ router.post('/', (req, res) => {
     _id: new mongoose.Types.ObjectId(),
     userId: req.body.userId,
     products: req.body.products,
-    total_of_product: req.body.total_of_product,
-    total_amount_ordered: req.body.total_amount_ordered
+    quantity: req.body.quantity,
+    totalAmount: req.body.totalAmount
     });
-    tmpCart
-    .save()
+    tmpCart.save()
     .then(result => {
       res.status(201).json({
         message: "success to insert data",

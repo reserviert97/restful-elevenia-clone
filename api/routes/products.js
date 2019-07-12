@@ -35,35 +35,7 @@ const upload = multer({
   fileFilter: fileFilter
 });
 
-/* ************************************************************ */
-router.get('/tes',(req,res) => {
-  let limit = (req.query.limit) ? parseInt(req.query.limit) : 10;
-  let page = (req.query.page) ? parseInt(req.query.page) : 1;
-  
-  let offset = (page - 1) * limit;
-
-  Product.find()
-    .limit(limit)
-    .skip(offset)
-    .then(data => {
-      res.json({
-        status : 200,
-        message : 'get products success',
-        limit : limit,
-        page : page,
-        totalPage : Math.ceil(parseInt(data.length) / limit),
-        data : data
-      })
-    })
-    .catch(err => {
-      return res.status(500).json({
-        status : 500,
-        message : err.message,
-        data : []
-      })
-    })
-})
-/* ************************************************************ */
+/* GET PRODUCT */
 router.get('/', (req, res) => {
   let limit = (req.query.limit) ? parseInt(req.query.limit) : 10;
   let page = (req.query.page) ? parseInt(req.query.page) : 1;
@@ -74,10 +46,21 @@ router.get('/', (req, res) => {
     .limit(limit)
     .skip(offset)
     .then(products => {
-      res.status(200).json({
-        status : 200,
-        message : 'get products success',
-        data : products
+      Product.find().then(totalProducts => {
+        if(products !== ""){
+          res.status(200).json({
+            totalRow : totalProducts.length,
+            totalPage: Math.ceil(parseInt(totalProducts.length) / limit),
+            status : 200,
+            message : 'get products success',
+            data : products
+          })
+        }else {
+          res.status(404).json({
+            status: 404,
+            message : "Data not found !"
+          })
+        }
       })
     })
     .catch(err => {
@@ -98,20 +81,26 @@ router.get('/getById/:id', (req, res) => {
           .then(users => {
             DetailProducts.findOne({numberOfProduct: id})
               .then(productDetails => {
-                console.log(productDetails)
-                res.status(200).json({
-                  status: 200,
-                  results : 'Get data has been successfully',
-                  data: {
-                    product_id : id,
-                    seller : users.name,
-                    product_name : products.product_name,
-                    product_price: products.product_price,
-                    details : productDetails,
-                    Photo : products.photo,
-                    Category: categories.category_name
-                  }
-                })
+                if(products !== ""){
+                  res.status(200).json({
+                    status: 200,
+                    results : 'Get data has been successfully',
+                    data: {
+                      product_id : id,
+                      seller : users.name,
+                      product_name : products.product_name,
+                      product_price: products.product_price,
+                      Photo : products.photo,
+                      Category: categories.category_name,
+                      productDetails
+                    }
+                  })  
+                }else{
+                  res.status(404).json({
+                    status:404,
+                    message: 'Data not found !'
+                  })
+                }
               })
             })
         })
@@ -136,13 +125,12 @@ router.get('/:id', (req, res) => {
     .then(products => {
       Category.findById({ _id : id })
         .then(categories => {
-          Product.find().then(totalProduct => {
             if(products != ""){
               res.status(200).json({
                 status: 200,
-                message: 'Get products is successfully',
-                totalRow : totalProduct.length,
-                totalPage: Math.ceil(parseInt(totalProduct.length) / limit),
+                message: 'Get products by categories successfully',
+                totalRow : products.length,
+                totalPage: Math.ceil(parseInt(products.length) / limit),
                 product_name_category : categories.category_name,
                 data : products
               })
@@ -152,7 +140,6 @@ router.get('/:id', (req, res) => {
                 message : 'Data not found !'
               })
             }
-          })
         })
     })
     .catch(err => {
