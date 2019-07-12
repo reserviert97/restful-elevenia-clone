@@ -43,13 +43,20 @@ router.get('/', (req, res) => {
     .skip(offset)
     .then(products => {
       Product.find().then(totalProducts => {
-        res.status(200).json({
-          totalRow : totalProducts.length,
-          totalPage: Math.ceil(parseInt(totalProducts.length) / limit),
-          status : 200,
-          message : 'get products success',
-          data : products
-        })
+        if(products !== ""){
+          res.status(200).json({
+            totalRow : totalProducts.length,
+            totalPage: Math.ceil(parseInt(totalProducts.length) / limit),
+            status : 200,
+            message : 'get products success',
+            data : products
+          })
+        }else {
+          res.status(404).json({
+            status: 404,
+            message : "Data not found !"
+          })
+        }
       })
     })
     .catch(err => {
@@ -70,20 +77,26 @@ router.get('/getById/:id', (req, res) => {
           .then(users => {
             DetailProducts.findOne({numberOfProduct: id})
               .then(productDetails => {
-                res.status(200).json({
-                  status: 200,
-                  results : 'Get data has been successfully',
-                  data: {
-                    product_id : id,
-                    seller : users.name,
-                    product_name : products.product_name,
-                    product_price: products.product_price,
-                    Photo : products.photo,
-                    Category: categories.category_name,
-                    productDetails
-                  },
-
-                })
+                if(products !== ""){
+                  res.status(200).json({
+                    status: 200,
+                    results : 'Get data has been successfully',
+                    data: {
+                      product_id : id,
+                      seller : users.name,
+                      product_name : products.product_name,
+                      product_price: products.product_price,
+                      Photo : products.photo,
+                      Category: categories.category_name,
+                      productDetails
+                    }
+                  })  
+                }else{
+                  res.status(404).json({
+                    status:404,
+                    message: 'Data not found !'
+                  })
+                }
               })
             })
         })
