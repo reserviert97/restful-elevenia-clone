@@ -198,7 +198,7 @@ router.post('/', multerUploads, (req,res) => {
             })
             console.log('save product');
             //add link to category
-            Category.findById(id)
+            Category.findById(pCategory)
             .exec()
             .then(category => {
               let updateData
@@ -218,6 +218,11 @@ router.post('/', multerUploads, (req,res) => {
                 });
               });
             })
+            .catch(err => {
+              res.status(500).json({
+                data: err
+              })
+            })
             
             //===========================
             productDetailsAdd.save()
@@ -235,6 +240,8 @@ router.post('/', multerUploads, (req,res) => {
               }) 
           })
           .catch(err => {
+            console.log(err);
+            
             res.status(500).json({
               error : err
             });
