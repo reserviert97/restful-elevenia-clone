@@ -9,7 +9,7 @@ module.exports =  transporter = nodemailer.createTransport({
 })
 
 module.exports = getPasswordResetURL = (user, token) =>
-  `http://localhost:3000/password/reset/${user._id}/${token}`
+  `https://elevenia.herokuapp.com/password/reset/${user._id}/${token}`
 
 module.exports = resetPasswordTemplate = (user, url) => {
   const from = "maslownr@gmail.com"
