@@ -96,10 +96,12 @@ router.post('/', (req, res) => {
 router.patch("/:id", (req, res) => {
     const id = req.params.id;
     const updateOps = {};
+    console.log("dari field", req.body)
     for (const ops of req.body) {
       updateOps[ops.field] = ops.value;
     }
-    TmpOrder.update({ _id: id }, { $set: updateOps })
+    console.log(updateOps);
+    TmpOrder.update({ userId: id }, { $set: updateOps })
       .exec()
       .then(result => {
         res.status(200).json(result);

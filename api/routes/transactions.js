@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const Transaction = require('../models/transaction');
+const Product = require('../models/product');
+const tmpCart = require('../models/tmpCart')
 
 router.get('/', (req, res) => {
-  Transaction.find()
+  Transaction.find().populate('products')
   .exec()
   .then(transactions => {
     res.status(200).json({
@@ -20,7 +22,8 @@ router.get('/', (req, res) => {
 });
 /* Get By Id */
 router.get('/:id', (req, res) => {
-  Transaction.findById(req.params.id)
+  Transaction.findOne({transaction_id_user : req.params.id}).populate('products')
+    .exec()
     .then(transactions => {
       res.status(200).json({
         data: transactions
@@ -34,16 +37,16 @@ router.get('/:id', (req, res) => {
 });
 /* POST */
 router.post('/',(req,res) => {
-  let { number, payment, metode, total, id_user } = req.body;
+  let { number, products, total, id_user } = req.body;
 
   let transactionAdd = new Transaction({
     transaction_number : number,
-    transaction_payment: payment,
-    transaction_metode: metode,
+    products : products,
     transaction_total: total,
     transaction_id_user: id_user
   });
-
+  
+  tmpCart.update({userId :id_user},{$set : { products : []}}).exec()
   transactionAdd.save()
     .then(transactions => {
       res.status(200).json({
