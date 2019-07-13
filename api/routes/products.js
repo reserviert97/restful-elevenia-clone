@@ -4,7 +4,6 @@ const multer = require('multer');
 const multerUploads = require('../middleware/multer').multerUploads;
 const dataUri = require('../middleware/multer').dataUri;
 const cloudinary = require('../../config/cloudinaryConfig');
-
 const DetailProducts = require('../models/detailProducts')
 
 const Product = require('../models/product');
@@ -198,7 +197,34 @@ router.post('/', multerUploads, (req,res) => {
               stock: products.product_stock
             })
             console.log('save product');
+            //add link to category
+            Category.findById(pCategory)
+            .exec()
+            .then(category => {
+              let updateData
+              let update
+              if (category.productId.length != 0){
+                updateData = category.productId
+                update = [...updateData,products._id]
+              } else {
+                update = products._id
+              }
+             
+              Category.update({ _id: pCategory }, { productId: update })
+              .exec()
+              .catch(err => {
+                res.status(500).json({
+                  error: err
+                });
+              });
+            })
+            .catch(err => {
+              res.status(500).json({
+                data: err
+              })
+            })
             
+            //===========================
             productDetailsAdd.save()
               .then(detailsProducts => {
                 console.log('save detail product');
@@ -214,6 +240,8 @@ router.post('/', multerUploads, (req,res) => {
               }) 
           })
           .catch(err => {
+            console.log(err);
+            
             res.status(500).json({
               error : err
             });

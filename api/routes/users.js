@@ -9,6 +9,8 @@ const multerUploads = require('../middleware/multer').multerUploads;
 const dataUri = require('../middleware/multer').dataUri;
 const cloudinary = require('../../config/cloudinaryConfig');
 const nodemailer = require('nodemailer');
+const Wishlist = require('../models/wishlist');
+const TmpOrder = require('../models/tmpCart');
 
 router.get('/', (req, res) => {
   User.find()
@@ -25,7 +27,7 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:id', (req, res) => {
-  User.findById(req.params.id)
+  User.find({_id: req.params.id})
     .then(user => {
       if (user) {
         res.status(200).json({
@@ -53,8 +55,6 @@ router.post('/register', (req, res) => {
     role,
     profileImage
   } = req.body;
-
-
   User.find({email})
     .then(user => {
       if (user >= 1) {
@@ -77,6 +77,32 @@ router.post('/register', (req, res) => {
             });
             user.save()
               .then(result => {
+                // auto create wishlist==============
+                const wishlist = new Wishlist({
+                  _id: new mongoose.Types.ObjectId(),
+                  id_user: result._id,
+                  productId: []
+                  });
+                  wishlist.save()
+                  .catch(err => {
+                    res.status(500).json({
+                      error: err
+                    });
+                  });
+                  const tmpCart = new TmpOrder({
+                    _id: new mongoose.Types.ObjectId(),
+                    userId: result._id,
+                    products: [],
+                    quantity: 0,
+                    totalAmount: 0
+                    });
+                    tmpCart.save()
+                    .catch(err => {
+                      res.status(500).json({
+                        error: err
+                      });
+                    });
+                  //================================
                 res.status(201).json({
                   status: 200,
                   createdUser: result
@@ -267,7 +293,7 @@ router.post('/forgotPassword', (req,res) => {
           from : 'maslownr@gmail.com',
           to : `${users.email}`,
           subject: 'Link to reset password',
-          text: 'Ingin melihat passwordmu ? klik link berikut !\n'+`http://localhost:3000/users/resetPassword/${users._id}`     
+          text: 'Ingin melihat passwordmu ? klik link berikut !\n'+`http://elevenia.herokuapp.com/users/resetPassword/${users._id}`     
         };
 
         transporter.sendMail(mailOptions,function(err,res){

@@ -35,6 +35,10 @@ const userSchema = mongoose.Schema({
   },
   profileImage: {
     type: String
+  },
+  alamat: {
+    type: String,
+    default: ''
   }
 }, { timestamps: true});
 
