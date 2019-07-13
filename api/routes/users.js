@@ -25,7 +25,7 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:id', (req, res) => {
-  User.findById(req.params.id)
+  User.find({_id: req.params.id})
     .then(user => {
       if (user) {
         res.status(200).json({
@@ -267,7 +267,7 @@ router.post('/forgotPassword', (req,res) => {
           from : 'maslownr@gmail.com',
           to : `${users.email}`,
           subject: 'Link to reset password',
-          text: 'Ingin melihat passwordmu ? klik link berikut !\n'+`http://localhost:3000/users/resetPassword/${users._id}`     
+          text: 'Ingin melihat passwordmu ? klik link berikut !\n'+`http://elevenia.herokuapp.com/users/resetPassword/${users._id}`     
         };
 
         transporter.sendMail(mailOptions,function(err,res){
