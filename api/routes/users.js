@@ -293,7 +293,7 @@ router.post('/forgotPassword', (req,res) => {
           from : 'maslownr@gmail.com',
           to : `${users.email}`,
           subject: 'Link to reset password',
-          text: 'Ingin melihat passwordmu ? klik link berikut !\n'+`http://elevenia.herokuapp.com/users/resetPassword/${users._id}`     
+          text: 'Ingin melihat passwordmu ? klik link berikut !\n'+`https://elevenia.herokuapp.com/users/resetPassword/${users._id}`     
         };
 
         transporter.sendMail(mailOptions,function(err,res){
