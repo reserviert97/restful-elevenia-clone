@@ -209,7 +209,6 @@ router.post('/', multerUploads, (req,res) => {
               } else {
                 update = products._id
               }
-             
               Category.update({ _id: pCategory }, { productId: update })
               .exec()
               .catch(err => {
@@ -223,7 +222,6 @@ router.post('/', multerUploads, (req,res) => {
                 data: err
               })
             })
-            
             //===========================
             productDetailsAdd.save()
               .then(detailsProducts => {
