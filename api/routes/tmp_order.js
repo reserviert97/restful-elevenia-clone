@@ -65,12 +65,15 @@ router.get('/users/:id', (req, res) => {
         })
     })
     .catch(err => {
-      res.status(500).json({
-        status : 500,
-        alert : "Please enter the User ID correctly",
-        message : err, 
-      });
+      TmpOrder.findOne({userId: id}).populate('products')
+      .exec()
+      .then(tmpOrder => {
+        res.status(200).json({
+          products : [],
+          data : tmpOrder
+        })
     });
+  })
 })
 router.post('/', (req, res) => {
     const tmpCart = new TmpOrder({
