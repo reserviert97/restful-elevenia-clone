@@ -10,7 +10,7 @@
   <p align="center">
     An E-Commerce Project build with React Native
     <br />
-    <a href="https://github.com/othneildrew/Best-README-Template"><strong>View Demo</strong></a>
+    <a href="https://youtu.be/tsGAjIFUYbA"><strong>View Demo</strong></a>
     <br />
     <br />
     <a href="https://github.com/othneildrew/Best-README-Template">Download app </a>
@@ -123,9 +123,9 @@ Contributions are what make the open source community such an amazing place to b
 <!-- CONTACT -->
 ## Contributors
 
-* Asep Lukman Hakim - [Github](https://github.com/reserviert97) - hakimasep4@gmail.com
+* Asep Lukman Hakim - [Github](https://github.com/Lukm4nZ3r0) - hakimasep4@gmail.com
 * Eko Febri - [Github](https://github.com/Ekofebri9) - Febri1412@gmail.com
-* Haji Dito - [Github](https://github.com/reserviert97) - hajidito.kerja@gmail.com
+* Haji Dito - [Github](https://github.com/hajidito) - hajidito.kerja@gmail.com
 * M Fadhly NR - [Github](https://github.com/maslow123) - mfadhlyn@gmail.com
 * Nurlatif Ardhi Pratama - [Github](https://github.com/reserviert97) - nurlatif97@outlook.com
 
