@@ -4,10 +4,18 @@ const Transaction = require('../models/transaction');
 const Product = require('../models/product');
 const tmpCart = require('../models/tmpCart')
 
+router.get('/jadi', (req, res) => {
+  console.log('hitted');
+  
+  
+})
+
 router.get('/', (req, res) => {
   Transaction.find().populate('products')
   .exec()
   .then(transactions => {
+    
+
     res.status(200).json({
       status: 200,
       message : "Get data transaction is successfully",
@@ -49,6 +57,46 @@ router.post('/',(req,res) => {
   tmpCart.update({userId :id_user},{$set : { products : []}}).exec()
   transactionAdd.save()
     .then(transactions => {
+
+      var sendNotification = function(data) {
+        var headers = {
+          "Content-Type": "application/json; charset=utf-8",
+          "Authorization": "Basic MTgzYjY3NjEtZjU3Ny00MGYwLTgyZjAtMTVlZDZjNmRmNzEy"
+        };
+        
+        var options = {
+          host: "onesignal.com",
+          port: 443,
+          path: "/api/v1/notifications",
+          method: "POST",
+          headers: headers
+        };
+        
+        var https = require('https');
+        var req = https.request(options, function(res) {  
+          res.on('data', function(data) {
+            console.log("Response:");
+            console.log(JSON.parse(data));
+          });
+        });
+        
+        req.on('error', function(e) {
+          console.log("ERROR:");
+          console.log(e);
+        });
+        
+        req.write(JSON.stringify(data));
+        req.end();
+      };
+      
+      var message = { 
+        app_id: "83d5d842-df27-4e20-a0c3-d4740b7af678",
+        contents: {"en": "Pembelian Sukses"},
+        included_segments: ["All"]
+      };
+      
+      sendNotification(message);
+
       res.status(200).json({
         status : 200,
         message : 'Transactions has been added',
