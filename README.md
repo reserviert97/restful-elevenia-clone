@@ -15,7 +15,7 @@
     <br />
     <a href="https://drive.google.com/open?id=1fYrzc8uIDzMQomivH2VaMWX_1ZCKe9FO">Download app </a>
     ·
-    <a href="https://github.com/Lukm4nZ3r0/rn-elevania-cloning-elevenia/issues">Report Bug</a>
+    <a href="https://github.com/reserviert97/restful-elevenia-clone/issues">Report Bug</a>
     ·
     <a href="https://github.com/Lukm4nZ3r0/rn-elevania-cloning-elevenia/issues">Request Feature</a>
   </p>
