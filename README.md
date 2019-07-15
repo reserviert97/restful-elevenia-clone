@@ -17,7 +17,7 @@
     ·
     <a href="https://github.com/reserviert97/restful-elevenia-clone/issues">Report Bug</a>
     ·
-    <a href="https://github.com/Lukm4nZ3r0/rn-elevania-cloning-elevenia/issues">Request Feature</a>
+    <a href="https://github.com/reserviert97/restful-elevenia-clone/issues">Request Feature</a>
   </p>
 </p>
 
