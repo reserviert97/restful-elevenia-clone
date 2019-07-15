@@ -13,7 +13,7 @@
     <a href="https://youtu.be/tsGAjIFUYbA"><strong>View Demo</strong></a>
     <br />
     <br />
-    <a href="https://github.com/othneildrew/Best-README-Template">Download app </a>
+    <a href="https://drive.google.com/open?id=1fYrzc8uIDzMQomivH2VaMWX_1ZCKe9FO">Download app </a>
     ·
     <a href="https://github.com/Lukm4nZ3r0/rn-elevania-cloning-elevenia/issues">Report Bug</a>
     ·
