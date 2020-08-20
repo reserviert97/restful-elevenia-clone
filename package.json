@@ -14,7 +14,7 @@
   "author": "Asep Lukman Hakim, Eko Febriyanto, Haji Dito, M Fadhly NR, Nurlatif Ardhi",
   "license": "ISC",
   "dependencies": {
-    "bcrypt": "^3.0.6",
+    "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "cloudinary": "^1.14.0",
     "datauri": "^2.0.0",
